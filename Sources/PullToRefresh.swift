@@ -85,9 +85,13 @@ private struct PullToRefresh: UIViewRepresentable {
 
 extension View {
     public func pullToRefresh(isShowing: Binding<Bool>, onRefresh: @escaping () -> Void) -> some View {
-        return overlay(
-            PullToRefresh(isShowing: isShowing, onRefresh: onRefresh)
-                .frame(width: 0, height: 0)
-        )
+        if #available(iOS 15.0, *) {
+            return self.refreshable(action: { onRefresh() })
+        } else {
+            return overlay(
+                PullToRefresh(isShowing: isShowing, onRefresh: onRefresh)
+                    .frame(width: 0, height: 0)
+            )
+        }
     }
 }
